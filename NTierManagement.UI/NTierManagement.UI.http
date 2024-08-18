@@ -1,0 +1,6 @@
+@NTierManagement.UI_HostAddress = http://localhost:5296
+
+GET {{NTierManagement.UI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
