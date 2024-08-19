@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NTierManagement.DAL\NTierManagement.DAL.csproj" />
+  </ItemGroup>
+
 </Project>
