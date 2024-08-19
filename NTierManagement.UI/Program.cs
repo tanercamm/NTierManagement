@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using NTierManagement.Entity.Context;
+
 namespace NTierManagement.UI
 {
     public class Program
@@ -14,6 +17,10 @@ namespace NTierManagement.UI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // SQL CONNECTÝON
+            builder.Services.AddDbContext<ManagementContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ManagementDB") + ";TrustServerCertificate=True"));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -26,7 +33,6 @@ namespace NTierManagement.UI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
