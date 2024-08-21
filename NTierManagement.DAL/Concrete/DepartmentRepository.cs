@@ -14,6 +14,11 @@ namespace NTierManagement.DAL.Concrete
             _dbSet = context.Set<Department>();
         }
 
+        public async Task<bool> AnyAsync(int id)
+        {
+            return await _dbSet.AnyAsync(x => x.DepartmentID == id);
+        }
+
         public async Task<List<Department>> GetAllWithDetailsAsync()
         {
             return await _dbSet

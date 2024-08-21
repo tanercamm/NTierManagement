@@ -20,7 +20,7 @@ namespace NTierManagement.UI.Controllers
         [HttpGet("Details")]
         public async Task<ActionResult<List<Department>>> GetDepartmentsDetails()
         {
-            var departments = await _departmentService.GetAllWithDetails();
+            var departments = await _departmentService.GetAllWithDetailsAsync();
             return Ok(departments);
         }
 

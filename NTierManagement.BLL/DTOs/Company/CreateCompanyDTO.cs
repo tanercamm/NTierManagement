@@ -15,5 +15,7 @@ namespace NTierManagement.BLL.DTOs.Company
         public string PhoneNumber { get; set; }
 
         public string Email { get; set; }
+
+        public int CeoID { get; set; }
     }
 }

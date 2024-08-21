@@ -77,7 +77,7 @@ namespace NTierManagement.BLL.Services
 
         public async Task<CompanyDTO> GetByIdAsync(int id)
         {
-            var companyEntity = await _companyRepository.GetByIdAsync(id);
+            var companyEntity = await _companyRepository.GetByIdWithDetailsAsync(id);
 
             if (companyEntity == null)
                 throw new Exception("Company not found!");
@@ -117,13 +117,14 @@ namespace NTierManagement.BLL.Services
                 CompanyName = dto.CompanyName,
                 Address = dto.Address,
                 Email= dto.Email,
-                PhoneNumber = dto.PhoneNumber                
+                PhoneNumber = dto.PhoneNumber,
+                CeoID = dto.CeoID
             };
 
             await _companyRepository.AddAsync(companyEntity);
         }
 
-        public Task UpdateAsync(UpdateCompanyDTO entity)
+        public Task UpdateAsync(UpdateCompanyDTO dto)
         {
             throw new NotImplementedException();
         }

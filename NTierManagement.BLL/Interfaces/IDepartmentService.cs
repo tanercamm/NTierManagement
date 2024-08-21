@@ -4,7 +4,7 @@ namespace NTierManagement.BLL.Interfaces
 {
     public interface IDepartmentService
     {
-        Task<List<DepartmentDTO>> GetAllWithDetails();
+        Task<List<DepartmentDTO>> GetAllWithDetailsAsync();
 
         Task<List<DepartmentBaseDTO>> GetAllAsync();
 

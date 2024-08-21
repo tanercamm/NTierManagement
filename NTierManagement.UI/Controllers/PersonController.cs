@@ -20,7 +20,7 @@ namespace NTierManagement.UI.Controllers
         [HttpGet("Details")]
         public async Task<ActionResult<List<Person>>> GetPeopleDetails()
         {
-            var people = await _personService.GetAllWithDetails();
+            var people = await _personService.GetAllWithDetailsAsync();
             return Ok(people);
         }
 
@@ -33,6 +33,7 @@ namespace NTierManagement.UI.Controllers
         }
 
         // GET: api/Person/1
+        [HttpGet("{id}")]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
             var person = await _personService.GetByIdAsync(id);

@@ -20,5 +20,9 @@ namespace NTierManagement.BLL.DTOs.Person
         public string Email { get; set; }
 
         public Roles Role { get; set; }
+
+        public int CompanyID { get; set; }
+
+        public int DepartmentID { get; set; }
     }
 }

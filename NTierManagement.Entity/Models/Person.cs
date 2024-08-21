@@ -28,11 +28,11 @@ namespace NTierManagement.Entity.Models
         public int? CompanyID { get; set; }
 
         [ForeignKey("CompanyID")]
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
 
         public int? DepartmentID { get; set; }
 
         [ForeignKey("DepartmentID")]
-        public Department Department { get; set; }
+        public Department? Department { get; set; }
     }
 }

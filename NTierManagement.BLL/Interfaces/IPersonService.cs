@@ -4,7 +4,7 @@ namespace NTierManagement.BLL.Interfaces
 {
     public interface IPersonService
     {
-        Task<List<PersonDTO>> GetAllWithDetails();
+        Task<List<PersonDTO>> GetAllWithDetailsAsync();
 
         Task<List<PersonBaseDTO>> GetAllAsync();
 

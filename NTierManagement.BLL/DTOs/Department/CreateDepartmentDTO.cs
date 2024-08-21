@@ -13,5 +13,9 @@ namespace NTierManagement.BLL.DTOs.Department
         public int Capacity { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public int CompanyID { get; set; }
+
+        public int LeaderID { get; set; }
     }
 }

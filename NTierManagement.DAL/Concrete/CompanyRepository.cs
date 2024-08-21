@@ -14,6 +14,11 @@ namespace NTierManagement.DAL.Concrete
             _dbSet = context.Set<Company>();
         }
 
+        public async Task<bool> AnyAsync(int id)
+        {
+            return await _dbSet.AllAsync(x => x.CompanyID == id);
+        }
+
         public async Task<List<Company>> GetAllWithDetailsAsync()
         {
             return await _dbSet
