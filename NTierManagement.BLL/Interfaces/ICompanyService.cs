@@ -4,7 +4,7 @@ namespace NTierManagement.BLL.Interfaces
 {
     public interface ICompanyService
     {
-        Task<List<CompanyDTO>> GetAllWithDetails();
+        Task<List<CompanyDTO>> GetAllWithDetailsAsync();
 
         Task<List<CompanyBaseDTO>> GetAllAsync();
 

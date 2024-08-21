@@ -1,29 +1,126 @@
 ﻿using NTierManagement.BLL.DTOs.Company;
+using NTierManagement.BLL.DTOs.Department;
+using NTierManagement.BLL.DTOs.Person;
 using NTierManagement.BLL.Interfaces;
+using NTierManagement.DAL.Abstract;
+using NTierManagement.Entity.Models;
 
 namespace NTierManagement.BLL.Services
 {
     public class CompanyService : ICompanyService
     {
+        private readonly ICompanyRepository _companyRepository;
 
-        public Task<List<CompanyDTO>> GetAllWithDetails()
+        public CompanyService(ICompanyRepository companyRepository)
         {
-            throw new NotImplementedException();
+            _companyRepository = companyRepository;
         }
 
-        public Task<List<CompanyBaseDTO>> GetAllAsync()
+        public async Task<List<CompanyDTO>> GetAllWithDetailsAsync()
         {
-            throw new NotImplementedException();
+            var companyEntities = await _companyRepository.GetAllWithDetailsAsync();
+
+            var list = new List<CompanyDTO>();
+
+            foreach (var companyEntity in companyEntities)
+            {
+                list.Add(new CompanyDTO
+                {
+                    CompanyID = companyEntity.CompanyID,
+                    CompanyName = companyEntity.CompanyName,
+                    Address = companyEntity.Address,
+                    Email = companyEntity.Email,
+                    PhoneNumber = companyEntity.PhoneNumber,
+                    Ceo = new PersonBaseDTO
+                    {
+                        PersonID = companyEntity.Ceo.PersonID,
+                        FirstName = companyEntity.Ceo.FirstName,
+                        LastName = companyEntity.Ceo.LastName,
+                        Age = companyEntity.Ceo.Age,
+                        Email = companyEntity.Ceo.Email,
+                        PhoneNumber = companyEntity.Ceo.PhoneNumber,
+                        Role = companyEntity.Ceo.Role
+                    },
+                    Departments = companyEntity.Departments
+                                  .Select(c => new DepartmentBaseDTO
+                                  {
+                                      DepartmentID = c.DepartmentID,
+                                      Subject = c.Subject,
+                                      Capacity = c.Capacity,
+                                      PhoneNumber = c.PhoneNumber
+                                  })
+                                  .ToList()
+                });
+            }
+            return list;
         }
 
-        public Task<CompanyDTO> GetByIdAsync(int id)
+        public async Task<List<CompanyBaseDTO>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var companyEntities = await _companyRepository.GetAllAsync();
+
+            var list = new List<CompanyBaseDTO>();
+
+            foreach (var companyEntity in companyEntities)
+            {
+                list.Add(new CompanyBaseDTO
+                {
+                    CompanyID = companyEntity.CompanyID,
+                    CompanyName = companyEntity.CompanyName,
+                    Address = companyEntity.Address,
+                    Email = companyEntity.Email,
+                    PhoneNumber = companyEntity.PhoneNumber
+                });
+            }
+            return list;
         }
 
-        public Task AddAsync(CreateCompanyDTO entity)
+        public async Task<CompanyDTO> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var companyEntity = await _companyRepository.GetByIdAsync(id);
+
+            if (companyEntity == null)
+                throw new Exception("Company not found!");
+
+            var companyDto = new CompanyDTO
+            {
+                CompanyID= companyEntity.CompanyID,
+                CompanyName= companyEntity.CompanyName,
+                Address = companyEntity.Address,
+                Email = companyEntity.Email,
+                PhoneNumber = companyEntity.PhoneNumber,
+                Ceo = new PersonBaseDTO
+                {
+                    PersonID = companyEntity.Ceo.PersonID,
+                    FirstName = companyEntity.Ceo.FirstName,
+                    LastName = companyEntity.Ceo.LastName,
+                    Age = companyEntity.Ceo.Age,
+                    Email = companyEntity.Ceo.Email,
+                    PhoneNumber = companyEntity.Ceo.PhoneNumber,
+                    Role = companyEntity.Ceo.Role
+                },
+                Departments = companyEntity.Departments.Select(d => new DepartmentBaseDTO
+                {
+                    DepartmentID = d.DepartmentID,
+                    Subject = d.Subject,
+                    Capacity = d.Capacity,
+                    PhoneNumber = d.PhoneNumber
+                }).ToList()
+            };
+            return companyDto;
+        }
+
+        public async Task AddAsync(CreateCompanyDTO dto)
+        {
+            var companyEntity = new Company
+            {
+                CompanyName = dto.CompanyName,
+                Address = dto.Address,
+                Email= dto.Email,
+                PhoneNumber = dto.PhoneNumber                
+            };
+
+            await _companyRepository.AddAsync(companyEntity);
         }
 
         public Task UpdateAsync(UpdateCompanyDTO entity)
@@ -35,6 +132,5 @@ namespace NTierManagement.BLL.Services
         {
             throw new NotImplementedException();
         }
-
     }
 }
