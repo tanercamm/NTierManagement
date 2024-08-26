@@ -12,8 +12,8 @@ using NTierManagement.Entity.Context;
 namespace NTierManagement.Entity.Migrations
 {
     [DbContext(typeof(ManagementContext))]
-    [Migration("20240821202817_ImproveEntityRelations")]
-    partial class ImproveEntityRelations
+    [Migration("20240824140454_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,9 @@ namespace NTierManagement.Entity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -74,6 +77,9 @@ namespace NTierManagement.Entity.Migrations
 
                     b.Property<int>("CompanyID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("LeaderID")
                         .HasColumnType("int");
@@ -107,7 +113,7 @@ namespace NTierManagement.Entity.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CompanyID")
+                    b.Property<int>("CompanyID")
                         .HasColumnType("int");
 
                     b.Property<int?>("DepartmentID")
@@ -121,6 +127,9 @@ namespace NTierManagement.Entity.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -140,7 +149,7 @@ namespace NTierManagement.Entity.Migrations
 
                     b.HasIndex("DepartmentID");
 
-                    b.ToTable("Persons");
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("NTierManagement.Entity.Models.Company", b =>
@@ -177,7 +186,9 @@ namespace NTierManagement.Entity.Migrations
                 {
                     b.HasOne("NTierManagement.Entity.Models.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("CompanyID");
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("NTierManagement.Entity.Models.Department", "Department")
                         .WithMany("People")

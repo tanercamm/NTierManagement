@@ -27,5 +27,14 @@ namespace NTierManagement.Entity.Models
         public Person Ceo { get; set; }
 
         public List<Department> Departments { get; set; }
+
+        public bool IsDeleted { get; private set; }
+
+        public void Delete()
+        {
+            IsDeleted = true;
+            if (Departments != null)
+                Departments.ForEach(x => x.Delete());
+        }
     }
 }

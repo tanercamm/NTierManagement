@@ -20,7 +20,8 @@ namespace NTierManagement.Entity.Migrations
                     Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CeoID = table.Column<int>(type: "int", nullable: false)
+                    CeoID = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,7 +38,8 @@ namespace NTierManagement.Entity.Migrations
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LeaderID = table.Column<int>(type: "int", nullable: false),
-                    CompanyID = table.Column<int>(type: "int", nullable: false)
+                    CompanyID = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,7 +53,7 @@ namespace NTierManagement.Entity.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Persons",
+                name: "People",
                 columns: table => new
                 {
                     PersonID = table.Column<int>(type: "int", nullable: false)
@@ -62,19 +64,21 @@ namespace NTierManagement.Entity.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<int>(type: "int", nullable: false),
-                    CompanyID = table.Column<int>(type: "int", nullable: true),
-                    DepartmentID = table.Column<int>(type: "int", nullable: true)
+                    CompanyID = table.Column<int>(type: "int", nullable: false),
+                    DepartmentID = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Persons", x => x.PersonID);
+                    table.PrimaryKey("PK_People", x => x.PersonID);
                     table.ForeignKey(
-                        name: "FK_Persons_Companies_CompanyID",
+                        name: "FK_People_Companies_CompanyID",
                         column: x => x.CompanyID,
                         principalTable: "Companies",
-                        principalColumn: "CompanyID");
+                        principalColumn: "CompanyID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Persons_Departments_DepartmentID",
+                        name: "FK_People_Departments_DepartmentID",
                         column: x => x.DepartmentID,
                         principalTable: "Departments",
                         principalColumn: "DepartmentID",
@@ -97,28 +101,28 @@ namespace NTierManagement.Entity.Migrations
                 column: "LeaderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Persons_CompanyID",
-                table: "Persons",
+                name: "IX_People_CompanyID",
+                table: "People",
                 column: "CompanyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Persons_DepartmentID",
-                table: "Persons",
+                name: "IX_People_DepartmentID",
+                table: "People",
                 column: "DepartmentID");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Companies_Persons_CeoID",
+                name: "FK_Companies_People_CeoID",
                 table: "Companies",
                 column: "CeoID",
-                principalTable: "Persons",
+                principalTable: "People",
                 principalColumn: "PersonID",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Departments_Persons_LeaderID",
+                name: "FK_Departments_People_LeaderID",
                 table: "Departments",
                 column: "LeaderID",
-                principalTable: "Persons",
+                principalTable: "People",
                 principalColumn: "PersonID",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -127,15 +131,15 @@ namespace NTierManagement.Entity.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Companies_Persons_CeoID",
+                name: "FK_Companies_People_CeoID",
                 table: "Companies");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Departments_Persons_LeaderID",
+                name: "FK_Departments_People_LeaderID",
                 table: "Departments");
 
             migrationBuilder.DropTable(
-                name: "Persons");
+                name: "People");
 
             migrationBuilder.DropTable(
                 name: "Departments");

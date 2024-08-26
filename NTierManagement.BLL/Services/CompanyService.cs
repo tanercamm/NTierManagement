@@ -22,7 +22,7 @@ namespace NTierManagement.BLL.Services
 
             var list = new List<CompanyDTO>();
 
-            foreach (var companyEntity in companyEntities)
+            foreach (var companyEntity in companyEntities.Where(t => !t.IsDeleted))
             {
                 list.Add(new CompanyDTO
                 {
@@ -61,7 +61,7 @@ namespace NTierManagement.BLL.Services
 
             var list = new List<CompanyBaseDTO>();
 
-            foreach (var companyEntity in companyEntities)
+            foreach (var companyEntity in companyEntities.Where(t => !t.IsDeleted))
             {
                 list.Add(new CompanyBaseDTO
                 {
@@ -79,7 +79,7 @@ namespace NTierManagement.BLL.Services
         {
             var companyEntity = await _companyRepository.GetByIdWithDetailsAsync(id);
 
-            if (companyEntity == null)
+            if (companyEntity == null || companyEntity.IsDeleted)
                 throw new Exception("Company not found!");
 
             var companyDto = new CompanyDTO

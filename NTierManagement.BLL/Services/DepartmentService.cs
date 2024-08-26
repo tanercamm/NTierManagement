@@ -24,7 +24,7 @@ namespace NTierManagement.BLL.Services
 
             var list = new List<DepartmentDTO>();
 
-            foreach (var departmentEntity in departmentEntities)
+            foreach (var departmentEntity in departmentEntities.Where(t => !t.IsDeleted))
             {
                 list.Add(new DepartmentDTO
                 {
@@ -61,7 +61,7 @@ namespace NTierManagement.BLL.Services
 
             var list = new List<DepartmentBaseDTO>();
 
-            foreach (var departmentEntity in departmentEntities)
+            foreach (var departmentEntity in departmentEntities.Where(t => !t.IsDeleted))
             {
                 list.Add(new DepartmentBaseDTO
                 {
@@ -78,7 +78,7 @@ namespace NTierManagement.BLL.Services
         {
             var departmentEntity = await _departmentRepository.GetByIdWithDetailsAsync(id);
 
-            if (departmentEntity == null)
+            if (departmentEntity == null || departmentEntity.IsDeleted)
                 throw new Exception("Department not found!");
 
             var departmentDto = new DepartmentDTO

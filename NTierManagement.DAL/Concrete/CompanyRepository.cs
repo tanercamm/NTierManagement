@@ -16,21 +16,35 @@ namespace NTierManagement.DAL.Concrete
 
         public async Task<bool> AnyAsync(int id)
         {
-            return await _dbSet.AllAsync(x => x.CompanyID == id);
+            return await _dbSet.AnyAsync(x => x.CompanyID == id);
         }
 
         public async Task<List<Company>> GetAllWithDetailsAsync()
         {
-            return await _dbSet
+            var companies = await _dbSet
                             .Include(x => x.Departments)
                             .ToListAsync();
+
+            foreach (var company in companies)
+            {
+                company.Departments = company.Departments.Where(d => !d.IsDeleted).ToList();
+            }
+
+            return companies;
         }
 
         public async Task<Company> GetByIdWithDetailsAsync(int id)
         {
-            return await _dbSet
+            var company = await _dbSet
                             .Include(x => x.Departments)
-                            .FirstOrDefaultAsync(d => d.CompanyID == id);
+                            .FirstOrDefaultAsync(c => c.CompanyID == id);
+
+            if (company != null)
+            {
+                company.Departments = company.Departments.Where(d => !d.IsDeleted).ToList();
+            }
+
+            return company;
         }
     }
 }

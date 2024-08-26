@@ -47,6 +47,9 @@ namespace NTierManagement.Entity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -71,6 +74,9 @@ namespace NTierManagement.Entity.Migrations
 
                     b.Property<int>("CompanyID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("LeaderID")
                         .HasColumnType("int");
@@ -119,6 +125,9 @@ namespace NTierManagement.Entity.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -137,7 +146,7 @@ namespace NTierManagement.Entity.Migrations
 
                     b.HasIndex("DepartmentID");
 
-                    b.ToTable("Persons");
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("NTierManagement.Entity.Models.Company", b =>

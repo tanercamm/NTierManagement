@@ -1,9 +1,4 @@
 ﻿using NTierManagement.Entity.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NTierManagement.BLL.DTOs.Person
 {
@@ -21,8 +16,8 @@ namespace NTierManagement.BLL.DTOs.Person
 
         public Roles Role { get; set; }
 
-        public int CompanyID { get; set; }
+        public int? CompanyID { get; set; }
 
-        public int DepartmentID { get; set; }
+        public int? DepartmentID { get; set; }
     }
 }

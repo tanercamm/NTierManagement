@@ -29,5 +29,14 @@ namespace NTierManagement.Entity.Models
         public Company Company { get; set; }
 
         public List<Person> People { get; set; }
+
+        public bool IsDeleted { get; private set; }
+
+        public void Delete()
+        {
+            IsDeleted = true;
+            if (People != null)
+                People.ForEach(x => x.Delete());
+        }
     }
 }

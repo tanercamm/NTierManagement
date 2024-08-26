@@ -19,6 +19,7 @@ namespace NTierManagement.DAL.Concrete
             return await _dbSet
                             .Include(c => c.Company)
                             .Include(d => d.Department)
+                            .Where(p => !p.IsDeleted)
                             .ToListAsync();
         }
 
@@ -27,6 +28,7 @@ namespace NTierManagement.DAL.Concrete
             return await _dbSet
                             .Include(c => c.Company)
                             .Include(d => d.Department)
+                            .Where(p => p.PersonID == id && !p.IsDeleted)
                             .FirstOrDefaultAsync(p => p.PersonID == id);
         }
     }
