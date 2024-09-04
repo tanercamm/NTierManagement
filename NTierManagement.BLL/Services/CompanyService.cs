@@ -3,6 +3,7 @@ using NTierManagement.BLL.DTOs.Department;
 using NTierManagement.BLL.DTOs.Person;
 using NTierManagement.BLL.Interfaces;
 using NTierManagement.DAL.Abstract;
+using NTierManagement.Entity.Context;
 using NTierManagement.Entity.Models;
 
 namespace NTierManagement.BLL.Services
@@ -10,10 +11,14 @@ namespace NTierManagement.BLL.Services
     public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly ManagementContext _managementContext;
 
-        public CompanyService(ICompanyRepository companyRepository)
+        public CompanyService(ICompanyRepository companyRepository, IPersonRepository personRepository, ManagementContext managementContext)
         {
             _companyRepository = companyRepository;
+            _personRepository = personRepository;
+            _managementContext = managementContext;
         }
 
         public async Task<List<CompanyDTO>> GetAllWithDetailsAsync()
@@ -84,8 +89,8 @@ namespace NTierManagement.BLL.Services
 
             var companyDto = new CompanyDTO
             {
-                CompanyID= companyEntity.CompanyID,
-                CompanyName= companyEntity.CompanyName,
+                CompanyID = companyEntity.CompanyID,
+                CompanyName = companyEntity.CompanyName,
                 Address = companyEntity.Address,
                 Email = companyEntity.Email,
                 PhoneNumber = companyEntity.PhoneNumber,
@@ -112,14 +117,28 @@ namespace NTierManagement.BLL.Services
 
         public async Task AddAsync(CreateCompanyDTO dto)
         {
+
+            var ceo = new Person
+            {
+                FirstName = dto.Ceo.FirstName,
+                LastName = dto.Ceo.LastName,
+                Email = dto.Ceo.Email,
+                PhoneNumber = dto.Ceo.PhoneNumber,
+                Age = dto.Ceo.Age
+            };
+
+            await _personRepository.AddAsync(ceo);
+
             var companyEntity = new Company
             {
                 CompanyName = dto.CompanyName,
                 Address = dto.Address,
-                Email= dto.Email,
+                Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
-                CeoID = dto.CeoID
             };
+
+            ceo.Company = companyEntity;
+            companyEntity.AddCeo(ceo);
 
             await _companyRepository.AddAsync(companyEntity);
         }

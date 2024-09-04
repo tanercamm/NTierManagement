@@ -41,13 +41,13 @@ namespace NTierManagement.Entity.Context
         }
         public override int SaveChanges()
         {
-            ValidatePersons();
+            //ValidatePersons();
             return base.SaveChanges();
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            ValidatePersons();
+            //ValidatePersons();
             return await base.SaveChangesAsync(cancellationToken);
         }
 

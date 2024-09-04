@@ -36,5 +36,11 @@ namespace NTierManagement.Entity.Models
             if (Departments != null)
                 Departments.ForEach(x => x.Delete());
         }
+
+        public void AddCeo(Person ceo)
+        {
+            ceo.CompanyID = CompanyID;
+            Ceo = ceo;
+        }
     }
 }

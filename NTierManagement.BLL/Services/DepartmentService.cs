@@ -3,6 +3,7 @@ using NTierManagement.BLL.DTOs.Department;
 using NTierManagement.BLL.DTOs.Person;
 using NTierManagement.BLL.Interfaces;
 using NTierManagement.DAL.Abstract;
+using NTierManagement.Entity.Context;
 using NTierManagement.Entity.Models;
 
 namespace NTierManagement.BLL.Services
@@ -11,11 +12,15 @@ namespace NTierManagement.BLL.Services
     {
         private readonly IDepartmentRepository _departmentRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly ManagementContext _managementContext;
 
-        public DepartmentService(IDepartmentRepository departmentRepository, ICompanyRepository companyRepository)
+        public DepartmentService(IDepartmentRepository departmentRepository, ICompanyRepository companyRepository, IPersonRepository personRepository, ManagementContext managementContext)
         {
             _departmentRepository = departmentRepository;
             _companyRepository = companyRepository;
+            _personRepository = personRepository;
+            _managementContext = managementContext;
         }
 
         public async Task<List<DepartmentDTO>> GetAllWithDetailsAsync()
@@ -115,16 +120,31 @@ namespace NTierManagement.BLL.Services
             if (!isCompanyExist)
                 throw new Exception("Company does not exist!");
 
-            var entity = new Department
+            var departmentEntity = new Department
             {
                 Subject = dto.Subject,
                 Capacity = dto.Capacity,
                 PhoneNumber = dto.PhoneNumber,
-                CompanyID = dto.CompanyID,
-                LeaderID = dto.LeaderID
+                CompanyID = dto.CompanyID
             };
 
-            await _departmentRepository.AddAsync(entity);
+            var leader = new Person
+            {
+                FirstName = dto.Leader.FirstName,
+                LastName = dto.Leader.LastName,
+                Age= dto.Leader.Age,
+                PhoneNumber= dto.Leader.PhoneNumber,
+                Email= dto.Leader.Email,
+                Role = dto.Leader.Role,
+                CompanyID= departmentEntity.CompanyID,
+                DepartmentID = dto.Leader.DepartmentID
+            };
+
+
+            await _personRepository.AddAsync(leader);
+            await _departmentRepository.AddAsync(departmentEntity);
+
+            await _managementContext.SaveChangesAsync();
         }
 
         public Task UpdateAsync(UpdateDepartmentDTO dto)

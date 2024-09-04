@@ -55,12 +55,6 @@ namespace NTierManagement.Entity.Models
             {
                 throw new Exception("A person with the Leader or Employee role must belong to both a company and a department.");
             }
-
-            // Jobless (Role 3) için CompanyID ve DepartmentID boş olmalı
-            if (Role == Roles.Jobless && (CompanyID.HasValue || DepartmentID.HasValue))
-            {
-                throw new Exception("A person with the Jobless role cannot belong to a company or a department.");
-            }
         }
     }
 }

@@ -4,7 +4,6 @@
     {
         Ceo = 0,
         Leader = 1,
-        Employee = 2,
-        Jobless = 3
+        Employee = 2
     }
 }

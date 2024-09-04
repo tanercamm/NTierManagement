@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NTierManagement.BLL.DTOs.Person;
 
 namespace NTierManagement.BLL.DTOs.Department
 {
@@ -16,6 +12,6 @@ namespace NTierManagement.BLL.DTOs.Department
 
         public int CompanyID { get; set; }
 
-        public int LeaderID { get; set; }
+        public CreatePersonDTO Leader { get; set; }
     }
 }

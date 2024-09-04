@@ -117,20 +117,6 @@ namespace NTierManagement.BLL.Services
 
         public async Task AddAsync(CreatePersonDTO dto)
         {
-            if (dto.Role != Roles.Jobless)
-            {
-                if (!dto.CompanyID.HasValue)
-                {
-                    throw new Exception("CompanyID is required for non-Jobless roles.");
-                }
-
-                var isCompanyExist = await _companyRepository.GetByIdAsync(dto.CompanyID.Value);
-                if (isCompanyExist == null)
-                {
-                    throw new Exception("Company does not exist!");
-                }
-            }
-
             bool isDepartmentExist = true;
             if (dto.Role != Roles.Ceo && dto.DepartmentID.HasValue)
             {
@@ -158,11 +144,6 @@ namespace NTierManagement.BLL.Services
                 throw new InvalidOperationException("A Leader or Employee must have a DepartmentID.");
             }
 
-            if (dto.Role == Roles.Jobless && (dto.CompanyID != 0 || dto.DepartmentID.HasValue))
-            {
-                throw new InvalidOperationException("Jobless role cannot have CompanyID or DepartmentID.");
-            }
-
             // DTO'dan Person nesnesi oluşturulması
             var entity = new Person
             {
@@ -172,18 +153,13 @@ namespace NTierManagement.BLL.Services
                 PhoneNumber = dto.PhoneNumber,
                 Age = dto.Age,
                 Role = dto.Role,
-                CompanyID = dto.Role == Roles.Jobless ? (int?)null : dto.CompanyID, // Jobless için null olmalı
-                DepartmentID = dto.Role == Roles.Jobless ? (int?)null : dto.DepartmentID
+                CompanyID = dto.CompanyID, // Jobless için null olmalı
+                DepartmentID = dto.DepartmentID
             };
-
-            // Person nesnesi üzerinde Validate metodu çağrısı
-            entity.Validate();
 
             // Veritabanına ekleme
             await _personRepository.AddAsync(entity);
         }
-
-
 
         public Task UpdateAsync(UpdatePersonDTO dto)
         {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NTierManagement.BLL.DTOs.Person;
 
 namespace NTierManagement.BLL.DTOs.Company
 {
@@ -16,6 +12,6 @@ namespace NTierManagement.BLL.DTOs.Company
 
         public string Email { get; set; }
 
-        public int CeoID { get; set; }
+        public CreateCeoDTO Ceo { get; set; }
     }
 }
