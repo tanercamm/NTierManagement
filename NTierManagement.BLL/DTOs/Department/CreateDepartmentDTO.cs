@@ -12,6 +12,6 @@ namespace NTierManagement.BLL.DTOs.Department
 
         public int CompanyID { get; set; }
 
-        public CreatePersonDTO Leader { get; set; }
+        public CreateLeaderDTO Leader { get; set; }
     }
 }

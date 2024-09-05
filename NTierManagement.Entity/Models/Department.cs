@@ -38,5 +38,11 @@ namespace NTierManagement.Entity.Models
             if (People != null)
                 People.ForEach(x => x.Delete());
         }
+
+        public void AddLeader(Person leader)
+        {
+            leader.DepartmentID = DepartmentID;
+            Leader = leader;
+        }
     }
 }

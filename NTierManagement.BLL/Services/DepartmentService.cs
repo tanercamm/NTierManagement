@@ -120,6 +120,19 @@ namespace NTierManagement.BLL.Services
             if (!isCompanyExist)
                 throw new Exception("Company does not exist!");
 
+            var leader = new Person
+            {
+                FirstName = dto.Leader.FirstName,
+                LastName = dto.Leader.LastName,
+                Age = dto.Leader.Age,
+                PhoneNumber = dto.Leader.PhoneNumber,
+                Email = dto.Leader.Email,
+                CompanyID = dto.CompanyID,
+                Role = (Entity.Enums.Roles)1
+            };
+
+            await _personRepository.AddAsync(leader);
+
             var departmentEntity = new Department
             {
                 Subject = dto.Subject,
@@ -128,23 +141,10 @@ namespace NTierManagement.BLL.Services
                 CompanyID = dto.CompanyID
             };
 
-            var leader = new Person
-            {
-                FirstName = dto.Leader.FirstName,
-                LastName = dto.Leader.LastName,
-                Age= dto.Leader.Age,
-                PhoneNumber= dto.Leader.PhoneNumber,
-                Email= dto.Leader.Email,
-                Role = dto.Leader.Role,
-                CompanyID= departmentEntity.CompanyID,
-                DepartmentID = dto.Leader.DepartmentID
-            };
+            leader.Department = departmentEntity;
+            departmentEntity.AddLeader(leader);
 
-
-            await _personRepository.AddAsync(leader);
             await _departmentRepository.AddAsync(departmentEntity);
-
-            await _managementContext.SaveChangesAsync();
         }
 
         public Task UpdateAsync(UpdateDepartmentDTO dto)

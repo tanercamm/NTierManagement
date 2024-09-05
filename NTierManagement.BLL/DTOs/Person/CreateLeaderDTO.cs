@@ -1,6 +1,8 @@
-﻿namespace NTierManagement.BLL.DTOs.Person
+﻿using NTierManagement.Entity.Enums;
+
+namespace NTierManagement.BLL.DTOs.Person
 {
-    public class CreateCeoDTO
+    public class CreateLeaderDTO
     {
         public string FirstName { get; set; }
 

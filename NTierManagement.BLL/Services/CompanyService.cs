@@ -117,7 +117,6 @@ namespace NTierManagement.BLL.Services
 
         public async Task AddAsync(CreateCompanyDTO dto)
         {
-
             var ceo = new Person
             {
                 FirstName = dto.Ceo.FirstName,
