@@ -23,6 +23,7 @@ namespace NTierManagement.DAL.Concrete
         {
             var companies = await _dbSet
                             .Include(x => x.Departments)
+                            .Include(x => x.Ceo)
                             .ToListAsync();
 
             foreach (var company in companies)
@@ -37,6 +38,7 @@ namespace NTierManagement.DAL.Concrete
         {
             var company = await _dbSet
                             .Include(x => x.Departments)
+                            .Include(x => x.Ceo)
                             .FirstOrDefaultAsync(c => c.CompanyID == id);
 
             if (company != null)

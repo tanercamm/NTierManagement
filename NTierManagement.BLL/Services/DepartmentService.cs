@@ -90,7 +90,7 @@ namespace NTierManagement.BLL.Services
             {
                 DepartmentID = departmentEntity.DepartmentID,
                 Subject = departmentEntity.Subject,
-                Capacity= departmentEntity.Capacity,
+                Capacity = departmentEntity.Capacity,
                 PhoneNumber = departmentEntity.PhoneNumber,
                 Company = new CompanyBaseDTO
                 {
@@ -100,13 +100,14 @@ namespace NTierManagement.BLL.Services
                     Email = departmentEntity.Company.Email,
                     PhoneNumber = departmentEntity.Company.PhoneNumber
                 },
-                People = departmentEntity.People.Select(p => new PersonBaseDTO {
+                People = departmentEntity.People.Select(p => new PersonBaseDTO
+                {
                     PersonID = p.PersonID,
                     FirstName = p.FirstName,
                     LastName = p.LastName,
                     Age = p.Age,
-                    PhoneNumber= p.PhoneNumber,
-                    Email= p.Email,
+                    PhoneNumber = p.PhoneNumber,
+                    Email = p.Email,
                     Role = p.Role
                 }).ToList()
             };

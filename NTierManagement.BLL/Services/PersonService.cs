@@ -127,15 +127,20 @@ namespace NTierManagement.BLL.Services
                     Address = personEntity.Company.Address,
                     Email = personEntity.Company.Email,
                     PhoneNumber = personEntity.Company.PhoneNumber
-                },
-                Department = new DepartmentBaseDTO
+                }
+            };
+
+            if (personEntity.Role == Roles.Leader || personEntity.Role == Roles.Employee)
+            {
+
+                personDto.Department = new DepartmentBaseDTO
                 {
                     DepartmentID = personEntity.Department.DepartmentID,
                     Subject = personEntity.Department.Subject,
                     Capacity = personEntity.Department.Capacity,
                     PhoneNumber = personEntity.Department.PhoneNumber
-                }
-            };
+                };
+            }
             return personDto;
         }
 
