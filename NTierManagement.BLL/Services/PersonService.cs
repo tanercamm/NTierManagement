@@ -29,31 +29,55 @@ namespace NTierManagement.BLL.Services
 
             foreach (var personEntity in personEntities.Where(t => !t.IsDeleted))
             {
-                list.Add(new PersonDTO
+                if (personEntity.Role == Roles.Ceo)
                 {
-                    PersonID = personEntity.PersonID,
-                    FirstName = personEntity.FirstName,
-                    LastName = personEntity.LastName,
-                    Age = personEntity.Age,
-                    Email = personEntity.Email,
-                    PhoneNumber = personEntity.PhoneNumber,
-                    Role = personEntity.Role,
-                    Company = new CompanyBaseDTO
+                    list.Add(new PersonDTO
                     {
-                        CompanyID = personEntity.Company.CompanyID,
-                        CompanyName = personEntity.Company.CompanyName,
-                        Address = personEntity.Company.Address,
-                        Email = personEntity.Company.Email,
-                        PhoneNumber = personEntity.Company.PhoneNumber
-                    },
-                    Department = new DepartmentBaseDTO
+                        PersonID = personEntity.PersonID,
+                        FirstName = personEntity.FirstName,
+                        LastName = personEntity.LastName,
+                        Age = personEntity.Age,
+                        Email = personEntity.Email,
+                        PhoneNumber = personEntity.PhoneNumber,
+                        Role = personEntity.Role,
+                        Company = personEntity.Company != null ? new CompanyBaseDTO
+                        {
+                            CompanyID = personEntity.Company.CompanyID,
+                            CompanyName = personEntity.Company.CompanyName,
+                            Address = personEntity.Company.Address,
+                            Email = personEntity.Company.Email,
+                            PhoneNumber = personEntity.Company.PhoneNumber
+                        } : null
+                    });
+                }
+                else if (personEntity.Role == Roles.Leader || personEntity.Role == Roles.Employee)
+                {
+                    list.Add(new PersonDTO
                     {
-                        DepartmentID = personEntity.Department.DepartmentID,
-                        Subject = personEntity.Department.Subject,
-                        Capacity = personEntity.Department.Capacity,
-                        PhoneNumber = personEntity.Department.PhoneNumber
-                    }
-                });
+                        PersonID = personEntity.PersonID,
+                        FirstName = personEntity.FirstName,
+                        LastName = personEntity.LastName,
+                        Age = personEntity.Age,
+                        Email = personEntity.Email,
+                        PhoneNumber = personEntity.PhoneNumber,
+                        Role = personEntity.Role,
+                        Company = personEntity.Company != null ? new CompanyBaseDTO
+                        {
+                            CompanyID = personEntity.Company.CompanyID,
+                            CompanyName = personEntity.Company.CompanyName,
+                            Address = personEntity.Company.Address,
+                            Email = personEntity.Company.Email,
+                            PhoneNumber = personEntity.Company.PhoneNumber
+                        } : null,
+                        Department = new DepartmentBaseDTO
+                        {
+                            DepartmentID = personEntity.Department.DepartmentID,
+                            Subject = personEntity.Department.Subject,
+                            Capacity = personEntity.Department.Capacity,
+                            PhoneNumber = personEntity.Department.PhoneNumber
+                        }
+                    });
+                }
             }
             return list;
         }
@@ -153,11 +177,10 @@ namespace NTierManagement.BLL.Services
                 PhoneNumber = dto.PhoneNumber,
                 Age = dto.Age,
                 Role = dto.Role,
-                CompanyID = dto.CompanyID, // Jobless için null olmalı
+                CompanyID = dto.CompanyID,
                 DepartmentID = dto.DepartmentID
             };
 
-            // Veritabanına ekleme
             await _personRepository.AddAsync(entity);
         }
 
