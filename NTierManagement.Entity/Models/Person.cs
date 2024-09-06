@@ -41,5 +41,37 @@ namespace NTierManagement.Entity.Models
         {
             IsDeleted = true;
         }
+
+        // Kişinin rolünü güncellerken, eğer CEO ise CompanyID ile kontrol sağlanır
+        public void UpdateRole(Roles newRole, int? companyId = null, int? departmentId = null)
+        {
+            if (newRole == Roles.Ceo)
+            {
+                // CEO olarak atanıyorsa, DepartmentID null olmalı
+                if (departmentId.HasValue)
+                    throw new InvalidOperationException("A CEO cannot be assigned to a department.");
+
+                // Mevcut CEO varsa bu kişi silinmiş olarak işaretlenir
+                if (Role == Roles.Ceo && this.CompanyID != companyId)
+                {
+                    Delete();
+                }
+
+                CompanyID = companyId;
+                DepartmentID = null;
+            }
+            else if (newRole == Roles.Leader || newRole == Roles.Employee)
+            {
+                // Leader veya Employee ise DepartmentID zorunlu olmalı
+                if (!departmentId.HasValue)
+                    throw new InvalidOperationException("A Leader or Employee must have a DepartmentID.");
+
+                CompanyID = companyId;
+                DepartmentID = departmentId;
+            }
+
+            // Yeni rol ataması
+            Role = newRole;
+        }
     }
 }

@@ -4,6 +4,7 @@ using NTierManagement.BLL.DTOs.Person;
 using NTierManagement.BLL.Interfaces;
 using NTierManagement.DAL.Abstract;
 using NTierManagement.Entity.Context;
+using NTierManagement.Entity.Enums;
 using NTierManagement.Entity.Models;
 
 namespace NTierManagement.BLL.Services
@@ -148,9 +149,18 @@ namespace NTierManagement.BLL.Services
             await _departmentRepository.AddAsync(departmentEntity);
         }
 
-        public Task UpdateAsync(UpdateDepartmentDTO dto)
+        public async Task UpdateAsync(UpdateDepartmentDTO dto)
         {
-            throw new NotImplementedException();
+            var departmenEntity = await _departmentRepository.GetByIdAsync(dto.DepartmentID);
+
+            if (departmenEntity == null || departmenEntity.IsDeleted)
+                throw new Exception("Department not found!");
+
+            departmenEntity.Subject = dto.Subject;
+            departmenEntity.Capacity = dto.Capacity;
+            departmenEntity.PhoneNumber = dto.PhoneNumber;
+
+            await _departmentRepository.UpdateAsync(departmenEntity);
         }
 
         public Task DeleteAsync(int id)

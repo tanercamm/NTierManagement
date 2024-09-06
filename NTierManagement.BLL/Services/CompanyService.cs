@@ -4,6 +4,7 @@ using NTierManagement.BLL.DTOs.Person;
 using NTierManagement.BLL.Interfaces;
 using NTierManagement.DAL.Abstract;
 using NTierManagement.Entity.Context;
+using NTierManagement.Entity.Enums;
 using NTierManagement.Entity.Models;
 
 namespace NTierManagement.BLL.Services
@@ -142,9 +143,19 @@ namespace NTierManagement.BLL.Services
             await _companyRepository.AddAsync(companyEntity);
         }
 
-        public Task UpdateAsync(UpdateCompanyDTO dto)
+        public async Task UpdateAsync(UpdateCompanyDTO dto)
         {
-            throw new NotImplementedException();
+            var companyEntity = await _companyRepository.GetByIdAsync(dto.CompanyID);
+
+            if (companyEntity == null || companyEntity.IsDeleted)
+                throw new Exception("Company not found!");
+
+            companyEntity.CompanyName = dto.CompanyName;
+            companyEntity.Address = dto.Address;
+            companyEntity.Email = dto.Email;
+            companyEntity.PhoneNumber = dto.PhoneNumber;
+
+            await _companyRepository.UpdateAsync(companyEntity);
         }
 
         public Task DeleteAsync(int id)

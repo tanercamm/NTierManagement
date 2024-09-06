@@ -189,9 +189,96 @@ namespace NTierManagement.BLL.Services
             await _personRepository.AddAsync(entity);
         }
 
-        public Task UpdateAsync(UpdatePersonDTO dto)
+        public async Task UpdateAsync(UpdatePersonDTO dto)
         {
-            throw new NotImplementedException();
+            var personEntity = await _personRepository.GetByIdAsync(dto.PersonID);
+
+            if (personEntity == null || personEntity.IsDeleted)
+                throw new Exception("Person not found!");
+
+            if (personEntity.Role != dto.Role)
+            {
+                if (dto.Role == Roles.Ceo)
+                {
+                    // CEO için sadece CompanyID güncellenir, DepartmentID null olur
+                    if (dto.DepartmentID != null)
+                        throw new InvalidOperationException("A CEO cannot be assigned to a department.");
+
+                    // Şirketteki mevcut konumda bir CEO olup olmadığı kontrolü
+                    var existingCeo = await _personRepository.GetByCompanyIdAndRoleAsync(dto.CompanyID.Value, Roles.Ceo);
+
+                    if (existingCeo != null && existingCeo.PersonID != dto.PersonID)
+                    {
+                        // Mevcut CEO'yu isDeleted = true olarak işaretleyin
+                        existingCeo.Delete();   // Person Enity içerisinde oluşturduğumuz Delete metodu ile isDeleted = true olur
+                        await _personRepository.UpdateAsync(existingCeo);
+                    }
+
+                    personEntity.CompanyID = dto.CompanyID;
+                    personEntity.DepartmentID = null;
+
+                    // Şirket tablosunda CeoID yeni atanan kişinin id ile değiştirilir
+                    var company = await _companyRepository.GetByIdAsync(dto.CompanyID.Value);
+                    if (company != null)
+                    {
+                        company.CeoID = dto.PersonID;
+                        await _companyRepository.UpdateAsync(company);
+                    }
+                }
+                else if (dto.Role == Roles.Leader)
+                {
+                    // Mevcut şirkette bir Leader olup olmadığı kontrolü
+                    var existingLeader = await _personRepository.GetByCompanyIdAndRoleAsync(dto.CompanyID.Value, Roles.Leader);
+
+                    if (existingLeader != null && existingLeader.PersonID != dto.PersonID)
+                    {
+                        // Mevcut Leader'ı isDeleted = true olarak işaretleyin
+                        existingLeader.Delete();
+                        await _personRepository.UpdateAsync(existingLeader);
+                    }
+
+                    // Leader için hem CompanyID hem de DepartmentID zorunlu olmalı
+                    if (dto.DepartmentID == null)
+                        throw new InvalidOperationException("A Leader must have a DepartmentID.");
+
+                    var departmentExists = await _departmentRepository.GetByIdAsync(dto.DepartmentID.Value) != null;
+                    if (!departmentExists)
+                        throw new Exception("Department does not exist!");
+
+                    personEntity.CompanyID = dto.CompanyID;
+                    personEntity.DepartmentID = dto.DepartmentID;
+
+                    // Department tablosunda LeaderID yeni atanan kişinin id ile değiştirilir
+                    var department = await _departmentRepository.GetByIdAsync(dto.DepartmentID.Value);
+                    if (department != null)
+                    {
+                        department.LeaderID = dto.PersonID;
+                        await _departmentRepository.UpdateAsync(department);
+                    }
+                }
+                else if (dto.Role == Roles.Employee)
+                {
+                    // Employee için hem CompanyID hem de DepartmentID zorunlu olmalı
+                    if (dto.DepartmentID == null)
+                        throw new InvalidOperationException("An Employee must have a DepartmentID.");
+
+                    var departmentExists = await _departmentRepository.GetByIdAsync(dto.DepartmentID.Value) != null;
+                    if (!departmentExists)
+                        throw new Exception("Department does not exist!");
+
+                    personEntity.CompanyID = dto.CompanyID;
+                    personEntity.DepartmentID = dto.DepartmentID;
+                }
+                personEntity.Role = dto.Role;
+            }
+
+            personEntity.FirstName = dto.FirstName;
+            personEntity.LastName = dto.LastName;
+            personEntity.Email = dto.Email;
+            personEntity.PhoneNumber = dto.PhoneNumber;
+            personEntity.Age = dto.Age;
+
+            await _personRepository.UpdateAsync(personEntity);
         }
 
         public Task DeleteAsync(int id)

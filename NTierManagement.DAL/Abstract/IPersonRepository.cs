@@ -1,4 +1,5 @@
-﻿using NTierManagement.Entity.Models;
+﻿using NTierManagement.Entity.Enums;
+using NTierManagement.Entity.Models;
 
 namespace NTierManagement.DAL.Abstract
 {
@@ -7,5 +8,7 @@ namespace NTierManagement.DAL.Abstract
         Task<List<Person>> GetAllWithDetailsAsync();
 
         Task<Person> GetByIdWithDetailsAsync(int id);
+
+        Task<Person> GetByCompanyIdAndRoleAsync(int companyId, Roles role);
     }
 }

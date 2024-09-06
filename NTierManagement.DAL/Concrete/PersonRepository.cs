@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NTierManagement.DAL.Abstract;
 using NTierManagement.Entity.Context;
+using NTierManagement.Entity.Enums;
 using NTierManagement.Entity.Models;
 
 namespace NTierManagement.DAL.Concrete
@@ -29,6 +30,12 @@ namespace NTierManagement.DAL.Concrete
                             .Include(c => c.Company)
                             .Include(d => d.Department)
                             .FirstOrDefaultAsync(p => p.PersonID == id && !p.IsDeleted);
+        }
+
+        public async Task<Person> GetByCompanyIdAndRoleAsync(int companyId, Roles role)
+        {
+            return await _dbSet
+                            .FirstOrDefaultAsync(p => p.CompanyID == companyId && p.Role == role && !p.IsDeleted);
         }
     }
 }

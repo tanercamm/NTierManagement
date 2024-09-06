@@ -6,8 +6,18 @@ using System.Threading.Tasks;
 
 namespace NTierManagement.BLL.DTOs.Company
 {
-    public class UpdateCompanyDTO : CreateCompanyDTO
+    public class UpdateCompanyDTO
     {
         public int CompanyID { get; set; }
+
+        public string CompanyName { get; set; }
+
+        public string Address { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string Email { get; set; }
+
+        public int? CeoID { get; set; }
     }
 }
