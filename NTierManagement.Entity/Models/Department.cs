@@ -35,8 +35,12 @@ namespace NTierManagement.Entity.Models
         public void Delete()
         {
             IsDeleted = true;
+
             if (People != null)
+            {
                 People.ForEach(x => x.Delete());
+            }    
+                
         }
 
         public void AddLeader(Person leader)

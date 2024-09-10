@@ -9,5 +9,7 @@ namespace NTierManagement.DAL.Abstract
         Task<Department> GetByIdWithDetailsAsync(int id);
 
         Task<bool> AnyAsync(int id);
+
+        Task<List<Department>> GetAllByCompanyIdWithDetails(int companyId);
     }
 }

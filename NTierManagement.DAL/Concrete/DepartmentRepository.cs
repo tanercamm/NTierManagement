@@ -51,5 +51,12 @@ namespace NTierManagement.DAL.Concrete
             return department;
 
         }
+
+        public async Task<List<Department>> GetAllByCompanyIdWithDetails(int companyID)
+        {
+            return await _dbSet
+                            .Include(c => c.People.Where(t => !t.IsDeleted))
+                            .ToListAsync();
+        }
     }
 }

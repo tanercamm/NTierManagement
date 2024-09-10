@@ -12,12 +12,14 @@ namespace NTierManagement.BLL.Services
     public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly IDepartmentRepository _departmentRepository;
         private readonly IPersonRepository _personRepository;
         private readonly ManagementContext _managementContext;
 
-        public CompanyService(ICompanyRepository companyRepository, IPersonRepository personRepository, ManagementContext managementContext)
+        public CompanyService(ICompanyRepository companyRepository, IDepartmentRepository departmentRepository, IPersonRepository personRepository, ManagementContext managementContext)
         {
             _companyRepository = companyRepository;
+            _departmentRepository = departmentRepository;
             _personRepository = personRepository;
             _managementContext = managementContext;
         }
@@ -158,9 +160,27 @@ namespace NTierManagement.BLL.Services
             await _companyRepository.UpdateAsync(companyEntity);
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var company = await _companyRepository.GetByIdAsync(id);
+
+            if (company == null || company.IsDeleted)
+                throw new Exception($"Unable to delete {id}");
+
+            var departmentList = await _departmentRepository.GetAllByCompanyIdWithDetails(id);
+
+            departmentList.ForEach(x => x.Delete());
+
+            company.Delete();
+
+            foreach (var departmentEntity in departmentList)
+            {
+                await _departmentRepository.UpdateAsync(departmentEntity);
+            }
+
+            await _companyRepository.UpdateAsync(company);
+
+            await _companyRepository.SaveChangesAsync();
         }
     }
 }

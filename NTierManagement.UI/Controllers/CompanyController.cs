@@ -67,11 +67,6 @@ namespace NTierManagement.UI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCompany(int id)
         {
-            var company = _companyService.GetByIdAsync(id);
-        
-            if(company == null)
-                return BadRequest();
-
             await _companyService.DeleteAsync(id);
             return NoContent();
         }
