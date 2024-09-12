@@ -4,7 +4,6 @@ using NTierManagement.BLL.DTOs.Person;
 using NTierManagement.BLL.Interfaces;
 using NTierManagement.DAL.Abstract;
 using NTierManagement.Entity.Context;
-using NTierManagement.Entity.Enums;
 using NTierManagement.Entity.Models;
 
 namespace NTierManagement.BLL.Services
@@ -179,8 +178,6 @@ namespace NTierManagement.BLL.Services
             }
 
             await _companyRepository.UpdateAsync(company);
-
-            await _companyRepository.SaveChangesAsync();
         }
     }
 }

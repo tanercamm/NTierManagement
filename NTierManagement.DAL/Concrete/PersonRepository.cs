@@ -37,5 +37,12 @@ namespace NTierManagement.DAL.Concrete
             return await _dbSet
                             .FirstOrDefaultAsync(p => p.CompanyID == companyId && p.Role == role && !p.IsDeleted);
         }
+
+        public async Task<List<Person>> GetByDepartmentIdAsync(int departmentId)
+        {
+            return await _dbSet
+                            .Where(p => p.DepartmentID == departmentId && !p.IsDeleted)
+                            .ToListAsync();
+        }
     }
 }

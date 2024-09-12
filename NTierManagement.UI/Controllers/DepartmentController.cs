@@ -67,7 +67,7 @@ namespace NTierManagement.UI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteDepartment(int id)
         {
-            var department = _departmentService.GetByIdAsync(id);
+            var department = await _departmentService.GetByIdAsync(id);
 
             if (department == null)
                 return BadRequest();

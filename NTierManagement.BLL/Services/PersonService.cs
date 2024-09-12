@@ -281,9 +281,15 @@ namespace NTierManagement.BLL.Services
             await _personRepository.UpdateAsync(personEntity);
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var person = await _personRepository.GetByIdAsync(id);
+
+            if (person == null || person.IsDeleted)
+                throw new Exception($"Unable to delete {id}");
+
+            person.Delete();
+            await _personRepository.UpdateAsync(person);
         }
     }
 }

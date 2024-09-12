@@ -10,5 +10,7 @@ namespace NTierManagement.DAL.Abstract
         Task<Person> GetByIdWithDetailsAsync(int id);
 
         Task<Person> GetByCompanyIdAndRoleAsync(int companyId, Roles role);
+
+        Task<List<Person>> GetByDepartmentIdAsync(int departmentID);
     }
 }

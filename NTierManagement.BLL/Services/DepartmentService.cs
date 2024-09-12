@@ -4,7 +4,6 @@ using NTierManagement.BLL.DTOs.Person;
 using NTierManagement.BLL.Interfaces;
 using NTierManagement.DAL.Abstract;
 using NTierManagement.Entity.Context;
-using NTierManagement.Entity.Enums;
 using NTierManagement.Entity.Models;
 
 namespace NTierManagement.BLL.Services
@@ -163,9 +162,24 @@ namespace NTierManagement.BLL.Services
             await _departmentRepository.UpdateAsync(departmenEntity);
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var department = await _departmentRepository.GetByIdAsync(id);
+
+            if (department == null || department.IsDeleted)
+                throw new Exception($"Unable to delete {id}");
+
+            var personList = await _personRepository.GetByDepartmentIdAsync(id);
+
+            foreach (var person in personList)
+            {
+                person.Delete();
+
+                await _personRepository.UpdateAsync(person);
+            }
+
+            department.Delete();
+            await _departmentRepository.UpdateAsync(department);
         }
     }
 }
