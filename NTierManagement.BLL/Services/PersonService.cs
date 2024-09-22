@@ -69,13 +69,13 @@ namespace NTierManagement.BLL.Services
                             Email = personEntity.Company.Email,
                             PhoneNumber = personEntity.Company.PhoneNumber
                         } : null,
-                        Department = new DepartmentBaseDTO
+                        Department = personEntity.Department != null ? new DepartmentBaseDTO
                         {
                             DepartmentID = personEntity.Department.DepartmentID,
                             Subject = personEntity.Department.Subject,
                             Capacity = personEntity.Department.Capacity,
                             PhoneNumber = personEntity.Department.PhoneNumber
-                        }
+                        } : null
                     });
                 }
             }
@@ -234,6 +234,7 @@ namespace NTierManagement.BLL.Services
                     {
                         // Mevcut Leader'ı isDeleted = true olarak işaretleyin
                         existingLeader.Delete();
+                        existingLeader.DepartmentID = null ;
                         await _personRepository.UpdateAsync(existingLeader);
                     }
 

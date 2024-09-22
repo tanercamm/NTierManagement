@@ -4,6 +4,7 @@ using NTierManagement.BLL.DTOs.Person;
 using NTierManagement.BLL.Interfaces;
 using NTierManagement.DAL.Abstract;
 using NTierManagement.Entity.Context;
+using NTierManagement.Entity.Enums;
 using NTierManagement.Entity.Models;
 
 namespace NTierManagement.BLL.Services
@@ -151,10 +152,22 @@ namespace NTierManagement.BLL.Services
             if (companyEntity == null || companyEntity.IsDeleted)
                 throw new Exception("Company not found!");
 
+            var oldCeo = await _personRepository.GetByIdAsync(companyEntity.CeoID);
+            oldCeo.CompanyID = null;
+            oldCeo.Delete();
+            await _personRepository.UpdateAsync(oldCeo);
+
             companyEntity.CompanyName = dto.CompanyName;
             companyEntity.Address = dto.Address;
             companyEntity.Email = dto.Email;
             companyEntity.PhoneNumber = dto.PhoneNumber;
+            companyEntity.CeoID = (int)dto.CeoID;
+
+            var newCeo = await _personRepository.GetByIdAsync((int) dto.CeoID);
+            newCeo.Role = Roles.Ceo;
+            newCeo.DepartmentID = null;
+            newCeo.CompanyID = companyEntity.CompanyID;
+            await _personRepository.UpdateAsync(newCeo);
 
             await _companyRepository.UpdateAsync(companyEntity);
         }

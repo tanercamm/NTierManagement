@@ -155,9 +155,19 @@ namespace NTierManagement.BLL.Services
             if (departmenEntity == null || departmenEntity.IsDeleted)
                 throw new Exception("Department not found!");
 
+            var oldLeader = await _personRepository.GetByIdAsync(departmenEntity.LeaderID);
+            oldLeader.DepartmentID = null;
+            oldLeader.Delete();
+            await _personRepository.UpdateAsync(oldLeader);
+
             departmenEntity.Subject = dto.Subject;
             departmenEntity.Capacity = dto.Capacity;
             departmenEntity.PhoneNumber = dto.PhoneNumber;
+            departmenEntity.LeaderID = (int)dto.LeaderID;
+
+            var newLeader = await _personRepository.GetByIdAsync((int) dto.LeaderID);
+            newLeader.DepartmentID = departmenEntity.DepartmentID;
+            await _personRepository.UpdateAsync(newLeader);
 
             await _departmentRepository.UpdateAsync(departmenEntity);
         }
